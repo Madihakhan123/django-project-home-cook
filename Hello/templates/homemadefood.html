@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title%}Home Made Food{% endblock title %}
+{% load static %}
+{% block body %}
+
+<div class="container my-3">
+  <div id="demo" class="crousel slide my=3" data-ride="carousel">
+    <h1 class="my-2 text-center">Home Cooks Near Your Location : </h1>
+    <ul class="carousel-indicators">
+      <li data-target="#demo" data-slide-to="0" class="active"></li>
+      {%for i in range %}
+      <li data-target="#demo" data-slide-to="{{i}}" class="active"></li>
+      {% endfor %}
+    </ul>
+
+
+    <div class="container carousel-inner no-padding">
+      <div class="crousel-item active">
+
+        <!--<div class="col-xs-3 col-sm-3 col-md-3">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{product.0.product_name}}</h5>
+              <p class="card-text">{{product.0.desc}}</p>
+              <button id="{{product.0.product_name}}" class="btn btn-primary cart">Add to Cart</button>
+            </div>
+          </div>
+
+        </div>-->
+        {% for i in product %}
+        <div class="col-xs-3 col-sm-3 col-md-3">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{i.product_name}}</h5>
+              <p class="card-text">{{i.desc}}</p>
+              <button id="{{i.product_name}}" class="btn btn-primary cart">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+      </div>
+      <div class="crousel-item active">
+        {% endif %}
+        {% endfor %}
+      </div>
+
+    </div>
+
+    <!-- left & right controls for the slide -->
+    <a class="carousel-control-prev" href="#demo" data-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </a>
+
+    <a class="carousel-control-next" href="#demo" data-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </a>
+  </div>
+</div>
+{% endblock body %}
+
+{% block js %}
+<script>
+
+  console.log('working');
+
+  if (localStorage.getItem('cart') == null) {
+    var cart = {};
+  }
+  else {
+    cart = JSON.parse(localStorage.getItem('cart'));
+    document.getElementById('cart').innerHTML = Object.keys(cart).length;
+  }
+
+  $('.cart').click(function () {
+    console.log('clicked');
+
+    var idstr = this.id.toString();
+    console.log(idstr);
+    if (cart[idstr] != undefined) {
+      cart[idstr] = cart[idstr] + 1;
+    }
+    else {
+      cart[idstr] = 1;
+    }
+    console.log(cart);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    document.getElementById('cart').innerHTML = Object.keys(cart).length;
+  });
+
+</script>
+{% endblock %}

@@ -1,0 +1,260 @@
+{% extends 'base.html' %} {% block title %}Home{% endblock title %} {% block body %} {% load static %}
+
+<div class="container-fluid my-4 px-0">
+  <div
+    id="carouselExampleCaptions"
+    class="carousel slide"
+    data-bs-ride="carousel"
+  >
+    <div class="carousel-indicators">
+      <button
+        type="button"
+        data-bs-target="#carouselExampleCaptions"
+        data-bs-slide-to="0"
+        class="active"
+        aria-current="true"
+        aria-label="Slide 1"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleCaptions"
+        data-bs-slide-to="1"
+        aria-label="Slide 2"
+      ></button>
+      <button
+        type="button"
+        data-bs-target="#carouselExampleCaptions"
+        data-bs-slide-to="2"
+        aria-label="Slide 3"
+      ></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img
+          src="/static/photo og cupcakes.jpg"
+          class="d-block w-100"
+          alt="a photo of food"
+        />
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Welcome To Cooked With Care</h5>
+          <p>
+            Here We Promise To Serve You Nutritious Foods With Care and Love...
+          </p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img
+          src="/static/fish merinated.jpg"
+          class="d-block w-100"
+          alt="a pic of fresh fruits"
+        />
+        <div class="carousel-caption d-none d-md-block">
+          <h5>We Prioritize Customer's Safety First</h5>
+          <p>Get A Tasty Plate Full of Nutritions Direct From Home...</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img
+          src="/static/fresh juice.jpg"
+          class="d-block w-100"
+          alt="a pic of cupcakes"
+        />
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Worried About Daily Meal?</h5>
+          <p>
+            Just Rely On Us Because We Serve Home Cooks With Best Culinary
+            Skills.
+          </p>
+        </div>
+      </div>
+    </div>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carouselExampleCaptions"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carouselExampleCaptions"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+
+<div class="container my-3">
+  <div id="demo" class="crousel slide my=3" data-ride="carousel">
+    <h1 class="my-2 text-center">Home Cooks Near Your Location :</h1>
+    <ul class="carousel-indicators">
+      <li data-target="#demo" data-slide-to="0" class="active"></li>
+      {%for i in range %}
+      <li data-target="#demo" data-slide-to="{{i}}" class="active"></li>
+      {% endfor %}
+    </ul>
+
+    <!---..slideshow starts here : -->
+    <div class="container carousel-inner no-padding">
+      <div class="crousel-item active">
+        <!--<div class="col-xs-3 col-sm-3 col-md-3">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{product.0.product_name}}</h5>
+              <p class="card-text">{{product.0.desc}}</p>
+              <button id="{{product.0.product_name}}" class="btn btn-primary cart">Add to Cart</button>
+            </div>
+          </div>
+
+        </div>-->
+        {% for i in product %}
+        <div class="col-xs-3 col-sm-3 col-md-3">
+          <div class="card" style="width: 18rem">
+            <div class="card-body">
+              <h5 class="card-title" id="namepr{{i.id}}">{{i.product_name}}</h5>
+              <p class="card-text">{{i.desc}}</p>
+              <span id="divpr{{i.product_id}}" class="divpr"
+                ><button id="{{i.product_name}}" class="btn btn-primary cart">
+                  Add to Cart
+                </button></span
+              >
+              <a href="/productview/{{i.id}}"
+                ><button id="{{i.product_id}}" class="btn btn-primary">
+                  View The product
+                </button></a
+              >
+            </div>
+          </div>
+        </div>
+        {% if forloop.counter|divisibleby:4 and forloop.counter > 0 %}
+        <div class="crousel-item active">{% endif %} {% endfor %}</div>
+      </div>
+    </div>
+
+    <!-- left & right controls for the slide 
+    <a class="carousel-control-prev" href="#demo" data-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </a>
+
+    <a class="carousel-control-next" href="#demo" data-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </a>-->
+
+    {% endblock body %}
+  </div>
+</div>
+
+{% block js %}
+<script>
+  console.log("working");
+
+  if (localStorage.getItem("cart") == null) {
+    var cart = {};
+  } else {
+    cart = JSON.parse(localStorage.getItem("cart"));
+    //document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    updatecart(cart);
+  }
+
+  $(".divpr").on("click", "button.cart", function () {
+    console.log("clicked");
+
+    var idstr = this.id.toString();
+    console.log(idstr);
+    //var qty = 0;
+    if (cart[idstr] != undefined) {
+      //cart[idstr] = cart[idstr]+ 1;
+      qty = cart[idstr][1] + 1;
+      cart[idstr] = [idstr,qty];
+    } else {
+      qty = 1; 
+      //name = document.getElementById('name'+idstr);
+      //qty = cart[idstr];
+      cart[idstr] = [idstr,qty];
+    }
+    //console.log(cart);
+    //localStorage.setItem('cart', JSON.stringify(cart));
+    //document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    updatecart(cart);
+  });
+
+  $("#popcart").popover();
+  document
+    .getElementById("popcart")
+    .setAttribute(
+      "data-content",
+      "<h5>Cart for your items in Home Cooked with Care</h5>"
+    );
+  updatepopover(cart);
+  function updatepopover(cart) {
+    console.log("We are inside updatepopover");
+    var popstr = "";
+    popstr =
+      popstr +
+      "<h5>Cart for your items in my shoping cart </h5> <div class= 'mx-2 my-2'> ";
+    var i = 1;
+    for (var item in cart) {
+      popstr = popstr + "<b>" + i + "</b>";
+      popstr =
+        popstr +
+        cart[item][0]+
+        //document.getElementById("name" + item) +
+        "  - Qty : " +
+        cart[item][1] +
+        "<br>";
+      i = i + 1;
+    }
+    popstr =
+      popstr +
+      "</div> <a href= '/checkout'> <button class= 'btn btn-primary' id = 'checkout'>check out</button> </a> <button class= 'btn btn-primary' onclick='clearcart()' id = 'clear cart'>clearcart</button>";
+    console.log(popstr);
+    document.getElementById("popcart").setAttribute("data-content", popstr);
+    $("#popcart").popover();
+  }
+
+  function clearcart() {
+    cart = JSON.parse(localStorage.getItem("cart"));
+    //for( var item in cart){
+    //document.getElementById('div'+ item).innerHTML = '<button id="{{i.product_name}}" class="btn btn-primary cart">Add to Cart</button>'
+    //}
+    localStorage.clear();
+    cart = {};
+    updatecart(cart);
+  }
+  function updatecart(cart) {
+    //var sum = 0;
+    //for (var item in cart) {
+    //sum = sum + cart[item][1];
+    //document.getElementById('div' + item).innerHTML = " <button id='minus" + item + " ' class='btn btn-primary minus'>-</button> <span id = 'val" + item + "''>" + cart[item] + " </span> <button id='plus" + item + " ' class='btn btn-primary plus'>+</button>";
+    //}
+    localStorage.setItem("cart", JSON.stringify(cart));
+    document.getElementById("cart").innerHTML = Object.keys(cart).length;
+    console.log(cart);
+  }
+
+  //if plus sign is clicked, update the cart & the display value :
+  $(".divpr").on("click", "button.minus", function () {
+    console.log("minus clicked");
+    a = this.id.slice(7);
+    console.log(a);
+    cart["pr" + a][1] = cart["pr" + a][1] - 1;
+    cart["pr" + a][1] = math.max(0, cart["pr" + a]);
+    document.getElementById("valpr" + a).innerHTML = cart["pr" + a][1];
+    updatecart(cart);
+  });
+
+  $(".divpr").on("click", "button.plus", function () {
+    console.log("plus clicked");
+    a = this.id.slice(6);
+    console.log(a);
+    cart["pr" + a][1] = cart["pr" + a][1] + 1;
+    document.getElementById("valpr" + a).innerHTML = cart["pr" + a][1];
+    updatecart(cart);
+  });
+</script>
+{% endblock %}

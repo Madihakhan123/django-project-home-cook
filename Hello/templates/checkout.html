@@ -1,0 +1,105 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block title%}Checkout
+Point{% endblock title %} {% block body %}
+<div class="container">
+  <div class="col my-4">
+    <h2>
+      Step - 1 : Home Cooked With Care Express CheckOut : Review your cart Items
+    </h2>
+    <div>
+      <ul class="list-group" id="items"></ul>
+    </div>
+  </div>
+  <div class="col my-4">
+    <h2>Step - 2 : Enter Address and other details:</h2>
+    <form method="POST" action="/checkout" class="row g-3">
+      {% csrf_token %}
+      <input
+        type="hidden"
+        name="itemsjson"
+        id="itemsjson"
+        name="itemsjson"
+      />
+      <div class="col-md-6">
+        <label for="inputname" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name" />
+      </div>
+      <div class="col-md-6">
+        <label for="inputEmail" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" />
+      </div>
+      <div class="col-12">
+        <label for="inputAddress" class="form-label">Address</label>
+        <input
+          type="text"
+          class="form-control"
+          id="address"
+          name="address"
+          placeholder="1234 Main St"
+        />
+      </div>
+      <div class="col-md-6">
+        <label for="inputCity" class="form-label">City</label>
+        <input type="text" class="form-control" id="city" name="city" />
+      </div>
+      <div class="col-md-4">
+        <label for="inputState" class="form-label">State</label>
+        <input type="text" class="form-control" id="state" name="state" />
+      </div>
+      <div class="col-md-2">
+        <label for="inputZip" class="form-label">Zip</label>
+        <input type="text" class="form-control" id="zip" name="zip" />
+      </div>
+      <div class="col-md-2">
+        <label for="inputphone" class="form-label">Phone Number</label>
+        <input type="tel" class="form-control" id="phone" name="phone" />
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Place Order</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock body %} {% block js %}
+<script>
+  if (localStorage.getItem("cart") == null) {
+    var cart = {};
+  } else {
+    cart = JSON.parse(localStorage.getItem("cart"));
+  }
+
+  console.log(cart);
+  var sum = 0;
+  if ($.isEmptyObject(cart)) {
+    mystr = `Your Cart Is Empty. Please Add some items before checking out!`;
+    $("#items").append(mystr);
+  } else {
+    for (item in cart) {
+      let name = cart[item][0];
+      let qty = cart[item][1];
+      sum = sum + qty;
+      mystr = `<li
+          class="
+            list-group-item
+            d-flex
+            justify-content-between
+            align-items-center
+          "
+        >
+          ${name}
+          <span class="badge bg-primary rounded-pill">${qty}</span>
+        </li>`;
+      $("#items").append(mystr);
+    }
+  }
+  document.getElementById("cart").innerHTML = sum;
+
+  $('#itemsjson').val(JSON.stringify(cart));
+  {% if thank %}
+  alert('thanks for shopping with us ');
+  localStorage.clear();
+  //document.location = "/ ";
+  {% endif %}
+  
+</script>
+{% endblock js %}
