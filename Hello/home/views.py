@@ -24,6 +24,28 @@ def index(request):
     params = {'no_of_slides':nslides,'range':range(nslides),'product':products}
     return render(request, 'index.html',params)
 
+def searchmatch(query, item):
+    if query in item.desc.lower() or query in item.product_name.lower():
+        return True
+    else:
+        return False
+
+def search(request):
+    query = request.GET.get('search')
+    products = product.objects.all()
+    prod = [item for item in products if searchmatch(query , item)]
+    print(prod)
+    n = len(prod)
+    nslides = n//4 + ceil((n/4)-(n//4))
+    if len(prod) != 0:
+        params = {'no_of_slides':nslides,'range':range(nslides),'product':prod}
+
+    if len(prod) ==0:
+        params = {'msg': "please make sure to enter relevent search query. Sorry product not found."} 
+           
+    return render(request, 'index.html',params) 
+
+
 def homemadefood(request):
     context={
         'var':'You can get best food here.'
@@ -114,9 +136,6 @@ def handlelogout(request):
     messages.success(request,"Successfully Loggged Out")
     return redirect('home')
 
-def search(request):
-    return render(request, 'search.html') 
-
 
 def tracker(request):
     return render(request,'tracker.html')
@@ -128,7 +147,13 @@ def productview(request,id):
     #fetching products to show here :
     prod = product.objects.filter(id=id)
     print(prod)
-    return render(request,'productview.html',{'product':prod[0]}) 
+    return render(request,'productview.html',{'product':prod[0]})
+
+def viewrecipe(request,id):
+    #fetching products to show here :
+    prod = product.objects.filter(id=id)
+    print(prod)
+    return render(request,'viewrecipe.html',{'product':prod[0]})     
 
 def order(request):
     if request.method == 'POST':
@@ -147,7 +172,7 @@ def order(request):
         thank = True
         id = Order.order_id
 
-        return render(request, 'checkout.html',{'thank':thank, 'id':id})
+        return render(request, 'home.html',{'thank':thank, 'id':id})
     #return render(request,'checkout.html')       
 
     

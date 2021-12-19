@@ -4,15 +4,20 @@
 
 <div class="container my-3">
   <div class="row">
-    <div class="col-md-4">image here</div>
+    <div class="col-md-4"><img
+      src="/static/fresh juice.jpg"
+      class="d-block w-100"
+      alt="a pic of cupcakes"
+    /></div>
     <div class="col-md-8">
-      <h5>{{product.product_name}}</h5>
-      <h3><b>TK.</b>{{product.price}}</h3>
+      <h5 id="namepr{{product.id}}">{{product.product_name}}</h5>
+      <h3><b>TK.</b><span id="pricepr{{product.id}}">{{product.price}}</span></h3>
       <p>{{product.desc}}</p>
       <button class="btn btn-primary mx-2">Buy Now</button>
-      <button id="{{product.product_name}}" class="btn btn-primary cart">
+      <span id="divpr{{product.id}}" class="divpr">
+        <button id="pr{{product.id}}" class="btn btn-primary cart">
         Add to Cart
-      </button>
+      </button></span>
     </div>
   </div>
 </div>
@@ -25,21 +30,47 @@
   } else {
     cart = JSON.parse(localStorage.getItem("cart"));
     document.getElementById("cart").innerHTML = Object.keys(cart).length;
+    updatecart(cart);
   }
 
-  $(".cart").click(function () {
+  //$(".cart").click(function () {
+    //console.log("clicked");
+
+    //var idstr = this.id.toString();
+    //console.log(idstr);
+    //if (cart[idstr] != undefined) {
+      //cart[idstr] = cart[idstr] + 1;
+    //} else {
+      //cart[idstr] = 1;
+    //}
+    //console.log(cart);
+    //localStorage.setItem("cart", JSON.stringify(cart));
+    //document.getElementById("cart").innerHTML = Object.keys(cart).length;
+  //});
+
+  $(".divpr").on("click", "button.cart", function () {
     console.log("clicked");
 
     var idstr = this.id.toString();
     console.log(idstr);
+    //var qty = 0;
     if (cart[idstr] != undefined) {
-      cart[idstr] = cart[idstr] + 1;
+      qty = cart[idstr][1] + 1;
+      name = document.getElementById('name'+idstr).innerHTML;
+      price = document.getElementById('price'+idstr).innerHTML;
+      cart[idstr] = [name, qty, parseInt(price)];
+      //cart[idstr] = [idstr, qty];
     } else {
-      cart[idstr] = 1;
+      qty = 1;
+      name = document.getElementById('name'+idstr).innerHTML;
+      price = document.getElementById('price'+idstr).innerHTML;
+      cart[idstr] = [name, qty, parseInt(price)];
+      //cart[idstr] = [idstr, qty];
     }
-    console.log(cart);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    document.getElementById("cart").innerHTML = Object.keys(cart).length;
+    //console.log(cart);
+    //localStorage.setItem('cart', JSON.stringify(cart));
+    //document.getElementById('cart').innerHTML = Object.keys(cart).length;
+    updatecart(cart);
   });
 
   $("#popcart").popover();
@@ -49,5 +80,54 @@
       "data-content",
       "<h5>Cart for your items in Home Cooked with Care</h5>"
     );
+
+
+    updatepopover(cart);
+    function updatepopover(cart) {
+      console.log("We are inside updatepopover");
+      var popstr = "";
+      popstr =
+        popstr +
+        "<h5>Cart for your items in my shoping cart </h5> <div class= 'mx-2 my-2'> ";
+      var i = 1;
+      for (var item in cart) {
+        popstr = popstr + "<b>" + i + "</b>";
+        popstr =
+          popstr +
+          cart[item][0] +
+          //document.getElementById("name" + item) +
+          "  - Qty : " +
+          cart[item][1] +
+          "<br>";
+        i = i + 1;
+      }
+      popstr =
+        popstr +
+        "</div> <a href= '/checkout'> <button class= 'btn btn-primary' id = 'checkout'>check out</button> </a> <button class= 'btn btn-primary' onclick='clearcart()' id = 'clear cart'>clearcart</button>";
+      console.log(popstr);
+      document.getElementById("popcart").setAttribute("data-content", popstr);
+      $("#popcart").popover();
+    }
+
+    function clearcart() {
+      cart = JSON.parse(localStorage.getItem("cart"));
+      //for( var item in cart){
+      //document.getElementById('div'+ item).innerHTML = '<button id="{{i.product_name}}" class="btn btn-primary cart">Add to Cart</button>'
+      //}
+      localStorage.clear();
+      cart = {};
+      updatecart(cart);
+    }
+    
+    function updatecart(cart) {
+      //var sum = 0;
+      //for (var item in cart) {
+      //sum = sum + cart[item][1];
+      //document.getElementById('div' + item).innerHTML = " <button id='minus" + item + " ' class='btn btn-primary minus'>-</button> <span id = 'val" + item + "''>" + cart[item] + " </span> <button id='plus" + item + " ' class='btn btn-primary plus'>+</button>";
+      //}
+      localStorage.setItem("cart", JSON.stringify(cart));
+      document.getElementById("cart").innerHTML = Object.keys(cart).length;
+      console.log(cart);
+    }
 </script>
 {% endblock %}

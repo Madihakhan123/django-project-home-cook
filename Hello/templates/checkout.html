@@ -70,6 +70,7 @@ Point{% endblock title %} {% block body %}
 
   console.log(cart);
   var sum = 0;
+  var total_price = 0;
   if ($.isEmptyObject(cart)) {
     mystr = `Your Cart Is Empty. Please Add some items before checking out!`;
     $("#items").append(mystr);
@@ -77,7 +78,9 @@ Point{% endblock title %} {% block body %}
     for (item in cart) {
       let name = cart[item][0];
       let qty = cart[item][1];
+      let price = cart[item][2]*cart[item][1];
       sum = sum + qty;
+      total_price = total_price + price;
       mystr = `<li
           class="
             list-group-item
@@ -87,10 +90,13 @@ Point{% endblock title %} {% block body %}
           "
         >
           ${name}
-          <span class="badge bg-primary rounded-pill">${qty}</span>
+          <span class="badge bg-primary rounded-pill">Qty : ${qty}</span>
+          <span class="badge bg-primary rounded-pill">Price : ${price}</span>
         </li>`;
       $("#items").append(mystr);
     }
+    mystr = 'Your total bill is : '+total_price;
+    $("#items").append(mystr);
   }
   document.getElementById("cart").innerHTML = sum;
 

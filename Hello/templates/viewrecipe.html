@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block title%}
+{{product.product_name}} - Home Cooked With Care {% endblock title %} 
+{% block body %}
+
+<div class="container my-3">
+    <div class="row">
+      <div class="col-md-4"><img
+        src="/static/fresh juice.jpg"
+        class="d-block w-100"
+        alt="a pic of cupcakes"
+      /></div>
+      <div class="col-md-8">
+        <h5>{{product.product_name}}</h5>
+        <h5>Recipe : <br>
+            Ingredients :<br> 
+            1.<br> 
+            2.<br>
+            3.<br>
+            4.<br>
+             <br>
+            Procedure: <br>
+            step 1:<br>
+            step 2; <br>
+
+        </h5></div>  
+    </div>
+</div>
+{% endblock body %}

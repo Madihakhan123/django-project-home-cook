@@ -84,8 +84,8 @@
           </li>-->
         </ul>
         <div class="ml-auto">
-          <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <form method="get" action="/search" class="d-flex">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search" id="search">
             <button class="btn btn-outline-success" type="submit">Search</button>
             {% if user.is_authenticated %}
             <ul class="navbar-nav ml-auto">
